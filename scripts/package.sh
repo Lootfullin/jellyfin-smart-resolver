@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-version="${1:-0.1.0-beta}"
+version="${1:-1.0.0}"
 jellyfin_version="${2:-10.11.11}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/.." && pwd)"
@@ -9,6 +9,11 @@ archive_name="Jellyfin.SmartResolver_${version}_jellyfin-${jellyfin_version}.zip
 artifacts="${repo_root}/artifacts"
 publish="${repo_root}/publish"
 stage="${artifacts}/package"
+
+if [[ ! "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Version must use stable semantic versioning, for example 1.0.0." >&2
+    exit 1
+fi
 
 if ! command -v dotnet >/dev/null 2>&1; then
     echo ".NET 9 SDK is required." >&2
@@ -32,7 +37,10 @@ done
 
 mkdir -p -- "${stage}"
 dotnet restore "${repo_root}/Jellyfin.SmartResolver.sln"
-dotnet build "${repo_root}/Jellyfin.SmartResolver.sln" -c Release --no-restore
+dotnet build \
+    "${repo_root}/Jellyfin.SmartResolver.sln" \
+    -c Release --no-restore \
+    -p:Version="${version}"
 dotnet test "${repo_root}/Jellyfin.SmartResolver.sln" -c Release --no-build
 dotnet publish \
     "${repo_root}/src/Jellyfin.Plugin.SmartResolver/Jellyfin.Plugin.SmartResolver.csproj" \
@@ -45,7 +53,7 @@ cp -- "${dll}" "${stage}/"
 cat > "${stage}/meta.json" <<EOF
 {
   "category": "General",
-  "changelog": "Initial beta with nested series and movie filename resolvers.",
+  "changelog": "Stable release with nested series and filename-based movie resolution.",
   "description": "Safe, read-only media structure resolvers for Jellyfin.",
   "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
   "name": "Jellyfin Smart Resolver",
@@ -53,7 +61,7 @@ cat > "${stage}/meta.json" <<EOF
   "owner": "Lootfullin",
   "targetAbi": "${jellyfin_version}.0",
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "version": "0.1.0.0",
+  "version": "${version}.0",
   "status": "Active",
   "autoUpdate": false
 }

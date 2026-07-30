@@ -3,10 +3,13 @@ name: Release
 on:
   push:
     tags:
-      - v0.1.0-beta
+      - v*
 
 permissions:
   contents: write
+
+env:
+  JELLYFIN_VERSION: 10.11.11
 
 jobs:
   release:
@@ -18,22 +21,26 @@ jobs:
           dotnet-version: 9.0.x
       - name: Build, test and package
         shell: bash
-        run: ./scripts/package.sh "${GITHUB_REF_NAME#v}"
+        run: ./scripts/package.sh "${GITHUB_REF_NAME#v}" "$JELLYFIN_VERSION"
       - name: Create plugin catalog manifest
         shell: pwsh
         run: |
-          $archive = 'artifacts/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip'
+          $pluginVersion = $env:GITHUB_REF_NAME.Substring(1)
+          $archive = "artifacts/Jellyfin.SmartResolver_${pluginVersion}_jellyfin-$env:JELLYFIN_VERSION.zip"
           $checksum = (Get-FileHash -LiteralPath $archive -Algorithm MD5).Hash
           ./scripts/create-manifest.ps1 `
             -Repository '${{ github.repository }}' `
             -Checksum $checksum `
-            -ReleaseTag '${{ github.ref_name }}'
+            -ReleaseTag '${{ github.ref_name }}' `
+            -PluginVersion $pluginVersion `
+            -JellyfinVersion $env:JELLYFIN_VERSION
       - uses: softprops/action-gh-release@v3
         with:
-          prerelease: true
+          prerelease: false
+          generate_release_notes: true
           files: |
-            artifacts/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip
-            artifacts/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip.sha256
+            artifacts/Jellyfin.SmartResolver_*.zip
+            artifacts/Jellyfin.SmartResolver_*.zip.sha256
       - name: Publish catalog manifest
         shell: bash
         run: |

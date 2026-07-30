@@ -3,7 +3,7 @@
 Jellyfin Smart Resolver is a read-only plugin that helps Jellyfin understand
 media layouts whose navigation folders do not describe the actual media.
 
-Version `0.1.0-beta` targets **Jellyfin Server 10.11.11**. The plugin is a
+Version `1.0.0` targets **Jellyfin Server 10.11.11**. The plugin is a
 platform-neutral .NET assembly and requires .NET 9 only when building it.
 
 ## What it solves
@@ -43,6 +43,10 @@ the plugin derives `Moonraker` and `1979` from the video filename. The folder
 name is used only for navigation. Cyrillic and other Unicode movie names are
 preserved. Provider IDs in `[tmdbid-123]` and `[imdbid-tt1234567]` form are
 also preserved.
+
+Numeric movie titles are preserved as titles rather than mistaken for release
+years. For example, `2012 (2009).mkv` resolves to title `2012` and year `2009`,
+while `1917 (2019).mkv` resolves to title `1917` and year `2019`.
 
 ## Safety
 
@@ -141,6 +145,9 @@ Jellyfin Server versions other than 10.11.11 are not currently supported.
 - Movie folders must contain exactly one primary video; trailers and extras
   recognized by Jellyfin are ignored.
 - The plugin does not control the order or speed of metadata providers.
+- Metadata providers can still confuse numeric titles. Add a provider ID to
+  the filename, such as `1917 (2019) [tmdbid-530915].mkv`, when exact matching
+  is required.
 - Changing settings requires rescanning affected libraries.
 
 See [troubleshooting](docs/troubleshooting.md) for common problems.

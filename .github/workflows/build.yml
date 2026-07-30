@@ -23,3 +23,18 @@ jobs:
       - run: dotnet restore
       - run: dotnet build -c Release --no-restore
       - run: dotnet test -c Release --no-build
+      - name: Validate plugin catalog generation
+        if: runner.os == 'Linux'
+        shell: pwsh
+        run: |
+          ./scripts/create-manifest.ps1 `
+            -Repository '${{ github.repository }}' `
+            -Checksum '00000000000000000000000000000000' `
+            -ReleaseTag 'v1.0.0' `
+            -PluginVersion '1.0.0' `
+            -Timestamp '2026-01-01T00:00:00Z'
+          $json = Get-Content -Raw manifest.json
+          if (-not $json.TrimStart().StartsWith('[')) {
+            throw 'Plugin catalog root is not a JSON array.'
+          }
+          $null = ConvertFrom-Json -InputObject $json

@@ -45,6 +45,27 @@ public sealed class MovieFileDetectorTests
         Assert.Equal(2025, decision.DetectedYear);
     }
 
+    [Theory]
+    [InlineData("2012 (2009) [WEB-DL].mkv", "2012", 2009)]
+    [InlineData("1917 (2019) [UHD].mkv", "1917", 2019)]
+    [InlineData("1984 (1984).mkv", "1984", 1984)]
+    public void Detect_PreservesNumericMovieTitle(
+        string fileName,
+        string expectedTitle,
+        int expectedYear)
+    {
+        var folderPath = Path.Combine("Movies", "Navigation Folder");
+        var videoPath = Path.Combine(folderPath, fileName);
+
+        var decision = CreateDetector().Detect(
+            folderPath,
+            [FileMetadata(videoPath)]);
+
+        Assert.True(decision.Accepted);
+        Assert.Equal(expectedTitle, decision.DetectedName);
+        Assert.Equal(expectedYear, decision.DetectedYear);
+    }
+
     [Fact]
     public void Detect_DoesNotUseFolderYearAsFallback()
     {
