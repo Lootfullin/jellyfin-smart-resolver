@@ -34,6 +34,14 @@ $manifest = @(
     }
 )
 
-$manifest |
-    ConvertTo-Json -Depth 6 |
-    Set-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) 'manifest.json') -Encoding utf8
+$manifestPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'manifest.json'
+$manifestJson = ConvertTo-Json -InputObject $manifest -Depth 6
+
+if ($manifestJson.TrimStart()[0] -ne '[') {
+    throw 'The Jellyfin plugin catalog manifest root must be a JSON array.'
+}
+
+$null = ConvertFrom-Json -InputObject $manifestJson
+
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($manifestPath, "$manifestJson`n", $utf8NoBom)

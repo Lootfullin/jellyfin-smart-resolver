@@ -1,18 +1,20 @@
-{
-  "owner": "Lootfullin",
-  "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
-  "description": "Safe, read-only media structure resolvers for Jellyfin.",
-  "category": "General",
-  "name": "Jellyfin Smart Resolver",
-  "overview": "Resolves nested series roots and derives movie metadata from video filenames.",
-  "versions": [
-    {
-      "version": "0.1.0.0",
-      "checksum": "abdc7563cc5694c749e980b8e3093bad",
-      "sourceUrl": "https://github.com/Lootfullin/jellyfin-smart-resolver/releases/download/v0.1.0-beta/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip",
-      "timestamp": "2026-07-30T13:31:05Z",
-      "changelog": "Initial beta with nested series and movie filename resolvers.",
-      "targetAbi": "10.11.11.0"
-    }
-  ]
-}
+[
+  {
+    "owner": "Lootfullin",
+    "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
+    "description": "Safe, read-only media structure resolvers for Jellyfin.",
+    "category": "General",
+    "name": "Jellyfin Smart Resolver",
+    "overview": "Resolves nested series roots and derives movie metadata from video filenames.",
+    "versions": [
+      {
+        "version": "0.1.0.0",
+        "checksum": "abdc7563cc5694c749e980b8e3093bad",
+        "sourceUrl": "https://github.com/Lootfullin/jellyfin-smart-resolver/releases/download/v0.1.0-beta/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip",
+        "timestamp": "2026-07-30T13:31:05Z",
+        "changelog": "Initial beta with nested series and movie filename resolvers.",
+        "targetAbi": "10.11.11.0"
+      }
+    ]
+  }
+]
