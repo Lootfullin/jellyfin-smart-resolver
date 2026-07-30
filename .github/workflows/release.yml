@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v0.1.0-beta
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Build, test and package
+        shell: bash
+        run: ./scripts/package.sh "${GITHUB_REF_NAME#v}"
+      - name: Create plugin catalog manifest
+        shell: pwsh
+        run: |
+          $archive = 'artifacts/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip'
+          $checksum = (Get-FileHash -LiteralPath $archive -Algorithm MD5).Hash
+          ./scripts/create-manifest.ps1 `
+            -Repository '${{ github.repository }}' `
+            -Checksum $checksum `
+            -ReleaseTag '${{ github.ref_name }}'
+      - uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          files: |
+            artifacts/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip
+            artifacts/Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip.sha256
+      - name: Publish catalog manifest
+        shell: bash
+        run: |
+          cp manifest.json "$RUNNER_TEMP/manifest.json"
+          git fetch origin main
+          git checkout main
+          cp "$RUNNER_TEMP/manifest.json" manifest.json
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add manifest.json
+          git diff --cached --quiet || git commit -m "Update plugin manifest for ${GITHUB_REF_NAME}"
+          git push origin main

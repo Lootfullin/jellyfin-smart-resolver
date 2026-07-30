@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jellyfin Smart Resolver</title>
+</head>
+<body>
+<div id="SmartResolverConfigPage"
+     data-role="page"
+     class="page type-interior pluginConfigurationPage"
+     data-require="emby-input,emby-button,emby-checkbox,emby-select">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="SmartResolverConfigForm">
+                <h1>Jellyfin Smart Resolver</h1>
+                <p>Read-only resolver for nested series folders and movie names taken from video files.</p>
+
+                <label class="emby-checkbox-label">
+                    <input id="Enabled" type="checkbox" is="emby-checkbox">
+                    <span>Enable Smart Resolver</span>
+                </label>
+
+                <h2>Nested Series</h2>
+                <label class="emby-checkbox-label">
+                    <input id="NestedSeriesEnabled" type="checkbox" is="emby-checkbox">
+                    <span>Enable nested series resolution</span>
+                </label>
+                <div class="selectContainer">
+                    <label class="selectLabel" for="NestedSeriesMode">Resolver mode</label>
+                    <select id="NestedSeriesMode" is="emby-select">
+                        <option value="0">Year prefix: (2025) Title</option>
+                        <option value="1">Any single nested series</option>
+                        <option value="2">Custom regular expression</option>
+                    </select>
+                </div>
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="CustomRegex">Custom regular expression</label>
+                    <input id="CustomRegex" type="text" is="emby-input"
+                           placeholder="^\(\d{4}\)\s+.+$">
+                    <div class="fieldDescription">Applied to the outer folder name in Custom Regex mode.</div>
+                </div>
+                <label class="emby-checkbox-label">
+                    <input id="RequireExactlyOneEligibleChild" type="checkbox" is="emby-checkbox">
+                    <span>Require exactly one eligible nested folder</span>
+                </label>
+
+                <h2>Movies</h2>
+                <label class="emby-checkbox-label">
+                    <input id="MoviesEnabled" type="checkbox" is="emby-checkbox">
+                    <span>Use the video filename for movie name and year</span>
+                </label>
+                <p class="fieldDescription">
+                    Example: <code>(1979) Moonraker/Moonraker (1979) [WEB-DL].mkv</code>.
+                    The navigation folder name is not used as the movie title.
+                </p>
+
+                <h2>Logging</h2>
+                <label class="emby-checkbox-label">
+                    <input id="EnableResolutionLogs" type="checkbox" is="emby-checkbox">
+                    <span>Log successful resolutions</span>
+                </label>
+                <label class="emby-checkbox-label">
+                    <input id="EnableRejectionLogs" type="checkbox" is="emby-checkbox">
+                    <span>Log rejected candidates (debug)</span>
+                </label>
+
+                <div class="verticalSection">
+                    <p>After changing these settings, scan the affected library again.</p>
+                    <p>Log phrase: <code>Jellyfin Smart Resolver mapped</code></p>
+                </div>
+
+                <button is="emby-button" type="submit" class="raised button-submit block">
+                    <span>Save</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        (function () {
+            const pluginId = 'c61d7897-a923-4a6d-9d4d-c6c911f28e73';
+            const page = document.querySelector('#SmartResolverConfigPage');
+            const form = document.querySelector('#SmartResolverConfigForm');
+
+            page.addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    page.querySelector('#Enabled').checked = config.Enabled;
+                    page.querySelector('#NestedSeriesEnabled').checked = config.NestedSeriesEnabled;
+                    page.querySelector('#NestedSeriesMode').value = config.NestedSeriesMode;
+                    page.querySelector('#CustomRegex').value = config.CustomRegex || '';
+                    page.querySelector('#RequireExactlyOneEligibleChild').checked =
+                        config.RequireExactlyOneEligibleChild;
+                    page.querySelector('#MoviesEnabled').checked = config.MoviesEnabled;
+                    page.querySelector('#EnableResolutionLogs').checked = config.EnableResolutionLogs;
+                    page.querySelector('#EnableRejectionLogs').checked = config.EnableRejectionLogs;
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const mode = parseInt(page.querySelector('#NestedSeriesMode').value, 10);
+                const customRegex = page.querySelector('#CustomRegex').value;
+                if (mode === 2) {
+                    try {
+                        new RegExp(customRegex);
+                    } catch (error) {
+                        Dashboard.alert('The custom regular expression is invalid.');
+                        return false;
+                    }
+                }
+
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    config.Enabled = page.querySelector('#Enabled').checked;
+                    config.NestedSeriesEnabled = page.querySelector('#NestedSeriesEnabled').checked;
+                    config.NestedSeriesMode = mode;
+                    config.CustomRegex = customRegex;
+                    config.RequireExactlyOneEligibleChild =
+                        page.querySelector('#RequireExactlyOneEligibleChild').checked;
+                    config.MoviesEnabled = page.querySelector('#MoviesEnabled').checked;
+                    config.EnableResolutionLogs = page.querySelector('#EnableResolutionLogs').checked;
+                    config.EnableRejectionLogs = page.querySelector('#EnableRejectionLogs').checked;
+                    return ApiClient.updatePluginConfiguration(pluginId, config);
+                }).then(Dashboard.processPluginConfigurationUpdateResult);
+                return false;
+            });
+        }());
+    </script>
+</div>
+</body>
+</html>
