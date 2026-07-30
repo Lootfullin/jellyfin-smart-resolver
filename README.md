@@ -77,7 +77,14 @@ In Jellyfin, open **Dashboard → Plugins → Repositories**, add:
 https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/manifest.json
 ```
 
-Install **Jellyfin Smart Resolver** from the catalog and restart Jellyfin.
+The catalog contains two independent plugins:
+
+- **Jellyfin Smart Resolver** — resolves nested series folders and movie names
+  from video files.
+- **Choose your Meta!** — controls RU/EN metadata, posters, and logos for
+  movies and collections.
+
+Install either plugin from the catalog and restart Jellyfin.
 
 ### Manual installation
 
