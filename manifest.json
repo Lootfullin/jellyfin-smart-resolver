@@ -27,6 +27,14 @@
         "description":  "Choose Russian or English metadata, posters, and logos for movies and collections.",
         "versions":  [
                          {
+                             "timestamp":  "2026-07-30T20:52:37Z",
+                             "version":  "1.4.1.0",
+                             "sourceUrl":  "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.1/ChooseYourMeta_1.4.1_jellyfin-10.11.11.zip",
+                             "changelog":  "Fixed Russian cast and crew localization during large concurrent library scans.",
+                             "checksum":  "14fb2042676ce477a738020ca2d6f499",
+                             "targetAbi":  "10.11.11.0"
+                         },
+                         {
                              "timestamp":  "2026-07-30T20:35:08Z",
                              "version":  "1.4.0.0",
                              "sourceUrl":  "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.0/ChooseYourMeta_1.4.0_jellyfin-10.11.11.zip",
