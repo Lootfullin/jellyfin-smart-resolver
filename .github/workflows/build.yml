@@ -2,6 +2,8 @@ name: Build
 
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -38,3 +40,84 @@ jobs:
             throw 'Plugin catalog root is not a JSON array.'
           }
           $null = ConvertFrom-Json -InputObject $json
+
+  docker-smoke:
+    name: Jellyfin ${{ matrix.server-tag }} container
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - server-tag: 10.11.11
+            package-version: 10.11.11
+            sdk-version: 9.0.x
+            sdk-pin: 9.0.100
+            target-framework: net9.0
+          - server-tag: 12.0-rc3
+            package-version: 12.0.0-rc3
+            sdk-version: 10.0.x
+            sdk-pin: 10.0.100
+            target-framework: net10.0
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ matrix.sdk-version }}
+      - name: Select matching .NET SDK
+        run: |
+          dotnet new globaljson \
+            --sdk-version ${{ matrix.sdk-pin }} \
+            --roll-forward latestFeature \
+            --force
+          dotnet --version
+      - name: Publish plugin
+        run: |
+          dotnet restore \
+            -p:JellyfinVersion=${{ matrix.package-version }} \
+            -p:TargetFramework=${{ matrix.target-framework }}
+          dotnet publish \
+            src/Jellyfin.Plugin.SmartResolver/Jellyfin.Plugin.SmartResolver.csproj \
+            -c Release \
+            --no-restore \
+            -p:JellyfinVersion=${{ matrix.package-version }} \
+            -p:TargetFramework=${{ matrix.target-framework }} \
+            -o publish
+          mkdir -p runtime/plugins/JellyfinSmartResolver
+          cp publish/Jellyfin.Plugin.SmartResolver.dll \
+            runtime/plugins/JellyfinSmartResolver/
+      - name: Start Jellyfin with plugin
+        run: |
+          docker run --detach \
+            --name jellyfin-smart-resolver-test \
+            --publish 8096:8096 \
+            --volume "$PWD/runtime:/config" \
+            jellyfin/jellyfin:${{ matrix.server-tag }}
+      - name: Verify server, plugin, and diagnostic API
+        shell: bash
+        run: |
+          set -euo pipefail
+          ready=false
+          for _ in {1..60}; do
+            public_status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              http://127.0.0.1:8096/System/Info/Public || true)"
+            status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              http://127.0.0.1:8096/SmartResolver/History || true)"
+            if test "$public_status" = "200" &&
+              { test "$status" = "401" || test "$status" = "503"; } &&
+              docker logs jellyfin-smart-resolver-test 2>&1 |
+                grep --quiet --fixed-strings 'Loaded plugin: Jellyfin Smart Resolver'; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = "true"
+          test "$status" = "401" -o "$status" = "503"
+          docker logs jellyfin-smart-resolver-test 2>&1 |
+            grep --fixed-strings 'Jellyfin Smart Resolver'
+      - name: Show Jellyfin logs on failure
+        if: failure()
+        run: docker logs jellyfin-smart-resolver-test || true
+      - name: Stop Jellyfin
+        if: always()
+        run: docker rm --force jellyfin-smart-resolver-test || true

@@ -16,6 +16,8 @@ public sealed class PluginConfiguration : BasePluginConfiguration
 
     public bool MoviesEnabled { get; set; } = true;
 
+    public bool NestedMoviesEnabled { get; set; } = true;
+
     public bool EnableResolutionLogs { get; set; } = true;
 
     public bool EnableRejectionLogs { get; set; }

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Jellyfin support
+    url: https://forum.jellyfin.org/
+    about: Use the Jellyfin forum for general server, library, and metadata-provider questions.

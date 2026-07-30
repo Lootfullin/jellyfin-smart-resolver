@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-version="${1:-1.0.0}"
+version="${1:-1.1.0}"
 jellyfin_version="${2:-10.11.11}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/.." && pwd)"
@@ -53,11 +53,12 @@ cp -- "${dll}" "${stage}/"
 cat > "${stage}/meta.json" <<EOF
 {
   "category": "General",
-  "changelog": "Stable release with nested series and filename-based movie resolution.",
-  "description": "Safe, read-only media structure resolvers for Jellyfin.",
+  "changelog": "Plain-language settings, diagnostics, movie versions, multipart movies and deeper movie folders.",
+  "description": "Safely finds media stored in extra folders and reads movie names from video files.",
   "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
   "name": "Jellyfin Smart Resolver",
-  "overview": "Resolves nested series roots and derives movie metadata from video filenames.",
+  "overview": "Finds series stored one folder deeper and reads movie names from video files.",
+  "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/assets/icon.svg",
   "owner": "Lootfullin",
   "targetAbi": "${jellyfin_version}.0",
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",

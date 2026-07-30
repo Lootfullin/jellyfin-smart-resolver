@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '1.0.0',
+    [string]$Version = '1.1.0',
     [string]$JellyfinVersion = '10.11.11'
 )
 
@@ -55,11 +55,12 @@ Copy-Item -LiteralPath $dll -Destination $stage
 
 $meta = @{
     category = 'General'
-    changelog = 'Stable release with nested series and filename-based movie resolution.'
-    description = 'Safe, read-only media structure resolvers for Jellyfin.'
+    changelog = 'Plain-language settings, diagnostics, movie versions, multipart movies and deeper movie folders.'
+    description = 'Safely finds media stored in extra folders and reads movie names from video files.'
     guid = 'c61d7897-a923-4a6d-9d4d-c6c911f28e73'
     name = 'Jellyfin Smart Resolver'
-    overview = 'Resolves nested series roots and derives movie metadata from video filenames.'
+    overview = 'Finds series stored one folder deeper and reads movie names from video files.'
+    imageUrl = 'https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/assets/icon.svg'
     owner = 'Lootfullin'
     targetAbi = "$JellyfinVersion.0"
     timestamp = [DateTime]::UtcNow.ToString('o')

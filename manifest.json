@@ -15,6 +15,7 @@
         "checksum": "5471a65c0b318f7e4931ecf771a2fb76"
       }
     ],
-    "overview": "Resolves nested series roots and derives movie metadata from video filenames."
+    "overview": "Resolves nested series roots and derives movie metadata from video filenames.",
+    "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/assets/icon.svg"
   }
 ]

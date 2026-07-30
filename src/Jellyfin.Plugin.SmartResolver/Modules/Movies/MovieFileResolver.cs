@@ -1,5 +1,6 @@
 using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.SmartResolver.Core;
+using Jellyfin.Plugin.SmartResolver.Diagnostics;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Library;
@@ -12,13 +13,16 @@ namespace Jellyfin.Plugin.SmartResolver.Modules.Movies;
 public sealed class MovieFileResolver : IItemResolver
 {
     private readonly MovieFileDetector _detector;
+    private readonly ResolutionHistory _history;
     private readonly ILogger<MovieFileResolver> _logger;
 
     public MovieFileResolver(
         MovieFileDetector detector,
+        ResolutionHistory history,
         ILogger<MovieFileResolver> logger)
     {
         _detector = detector;
+        _history = history;
         _logger = logger;
     }
 
@@ -42,7 +46,11 @@ public sealed class MovieFileResolver : IItemResolver
             return null;
         }
 
-        var decision = _detector.Detect(args.Path, args.FileSystemChildren);
+        var decision = _detector.Detect(
+            args.Path,
+            args.FileSystemChildren,
+            configuration.NestedMoviesEnabled);
+        _history.Add("Movies", decision);
         if (!decision.Accepted)
         {
             if (configuration.EnableRejectionLogs)
@@ -62,6 +70,8 @@ public sealed class MovieFileResolver : IItemResolver
             Name = decision.DetectedName,
             ProductionYear = decision.DetectedYear,
             IsInMixedFolder = false,
+            AdditionalParts = decision.AdditionalParts.ToArray(),
+            LocalAlternateVersions = decision.AlternateVersions.ToArray(),
             VideoType = string.Equals(
                 Path.GetExtension(decision.ResolvedPath),
                 ".iso",

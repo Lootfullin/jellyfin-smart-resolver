@@ -133,7 +133,7 @@ public sealed class MovieFileDetectorTests
     }
 
     [Fact]
-    public void Detect_RejectsMultiplePrimaryVideoFiles()
+    public void Detect_RejectsDifferentPrimaryMovies()
     {
         var folderPath = Path.Combine("Movies", "Moonraker");
 
@@ -148,6 +148,66 @@ public sealed class MovieFileDetectorTests
         Assert.Equal(ResolverReasonCode.MultipleMovieFiles, decision.ReasonCode);
     }
 
+    [Fact]
+    public void Detect_AcceptsAlternateVersionsOfSameMovie()
+    {
+        var folderPath = Path.Combine("Movies", "Navigation");
+        var fullHd = Path.Combine(folderPath, "Moonraker (1979) - 1080p.mkv");
+        var ultraHd = Path.Combine(folderPath, "Moonraker (1979) - 2160p.mkv");
+
+        var decision = CreateDetector().Detect(
+            folderPath,
+            [FileMetadata(fullHd), FileMetadata(ultraHd)]);
+
+        Assert.True(decision.Accepted);
+        Assert.Equal("Moonraker", decision.DetectedName);
+        Assert.Equal([ultraHd], decision.AlternateVersions);
+        Assert.Contains(ResolverEvidence.MovieAlternateVersion, decision.Evidence);
+    }
+
+    [Fact]
+    public void Detect_AcceptsMultipartMovie()
+    {
+        var folderPath = Path.Combine("Movies", "Navigation");
+        var firstPart = Path.Combine(folderPath, "Once Upon a Time in America (1984) CD1.mkv");
+        var secondPart = Path.Combine(folderPath, "Once Upon a Time in America (1984) CD2.mkv");
+
+        var decision = CreateDetector().Detect(
+            folderPath,
+            [FileMetadata(firstPart), FileMetadata(secondPart)]);
+
+        Assert.True(decision.Accepted);
+        Assert.Equal("Once Upon a Time in America", decision.DetectedName);
+        Assert.Equal([secondPart], decision.AdditionalParts);
+        Assert.Contains(ResolverEvidence.MovieAdditionalPart, decision.Evidence);
+    }
+
+    [Fact]
+    public void Detect_AcceptsMovieInsideOneAdditionalFolder()
+    {
+        var outer = Directory.CreateTempSubdirectory("SmartResolverMovieOuter").FullName;
+        try
+        {
+            var inner = Directory.CreateDirectory(Path.Combine(outer, "Actual Movie")).FullName;
+            var video = Path.Combine(inner, "Moonraker (1979).mkv");
+            File.WriteAllBytes(video, []);
+
+            var decision = CreateDetector().Detect(
+                outer,
+                [DirectoryMetadata(inner)],
+                allowNestedFolder: true);
+
+            Assert.True(decision.Accepted);
+            Assert.Equal(video, decision.ResolvedPath);
+            Assert.Equal("Moonraker", decision.DetectedName);
+            Assert.Contains(ResolverEvidence.NestedMovieFolder, decision.Evidence);
+        }
+        finally
+        {
+            Directory.Delete(outer, recursive: true);
+        }
+    }
+
     private static MovieFileDetector CreateDetector()
     {
         return new MovieFileDetector(new NamingOptions());
@@ -160,6 +220,17 @@ public sealed class MovieFileDetectorTests
             Exists = true,
             FullName = path,
             IsDirectory = false,
+            Name = Path.GetFileName(path)
+        };
+    }
+
+    private static FileSystemMetadata DirectoryMetadata(string path)
+    {
+        return new FileSystemMetadata
+        {
+            Exists = true,
+            FullName = path,
+            IsDirectory = true,
             Name = Path.GetFileName(path)
         };
     }

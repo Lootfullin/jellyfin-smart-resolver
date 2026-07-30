@@ -9,7 +9,7 @@
 
 ## The Plugins page fails
 
-Install the latest `1.0.0` DLL. The plugin uses Jellyfin's standard
+Install the latest `1.1.0` DLL. The plugin uses Jellyfin's standard
 configurable `BasePlugin`, which initializes the assembly path required by the
 Plugins page.
 
@@ -28,6 +28,19 @@ Plugins page.
 - Put the title and year in the video filename, for example
   `Moonraker (1979) [WEB-DL].mkv`.
 - Do not rely on the parent folder for the title.
+- For multiple versions, keep the parsed title and year identical, for example
+  `Movie (2025) - 1080p.mkv` and `Movie (2025) - 2160p.mkv`.
+- For multiple parts, use suffixes such as `CD1` and `CD2`.
+
+## Check a folder without rescanning
+
+Open the Smart Resolver settings page, find **Check a folder without
+rescanning**, enter a path visible to the Jellyfin server and choose the media
+type. The check reads directory entries but never changes them.
+
+The recent-decisions section keeps the latest 200 results in memory. The list
+is cleared when Jellyfin restarts or when an administrator selects **Clear
+history**.
 
 ## A numeric movie title matched the wrong film
 

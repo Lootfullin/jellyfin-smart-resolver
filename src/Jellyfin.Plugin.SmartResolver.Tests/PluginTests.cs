@@ -36,6 +36,7 @@ public sealed class PluginTests
         Assert.True(configuration.Enabled);
         Assert.True(configuration.NestedSeriesEnabled);
         Assert.True(configuration.MoviesEnabled);
+        Assert.True(configuration.NestedMoviesEnabled);
         Assert.Equal(ResolverMode.YearPrefix, configuration.NestedSeriesMode);
         Assert.True(configuration.EnableResolutionLogs);
         Assert.False(configuration.EnableRejectionLogs);

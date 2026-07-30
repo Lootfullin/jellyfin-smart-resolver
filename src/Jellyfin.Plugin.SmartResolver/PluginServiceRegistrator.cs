@@ -1,3 +1,4 @@
+using Jellyfin.Plugin.SmartResolver.Diagnostics;
 using Jellyfin.Plugin.SmartResolver.Modules.Movies;
 using Jellyfin.Plugin.SmartResolver.Modules.NestedSeries;
 using MediaBrowser.Controller;
@@ -13,6 +14,7 @@ public sealed class PluginServiceRegistrator : IPluginServiceRegistrator
         IServiceCollection serviceCollection,
         IServerApplicationHost applicationHost)
     {
+        serviceCollection.AddSingleton<ResolutionHistory>();
         serviceCollection.AddSingleton<MovieFileDetector>();
         serviceCollection.AddSingleton<OuterFolderMatcher>();
         serviceCollection.AddSingleton<SeriesRootEvidenceDetector>();

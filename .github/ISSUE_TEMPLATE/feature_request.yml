@@ -1,0 +1,31 @@
+name: Feature request
+description: Suggest a media layout or diagnostic improvement.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Explain the media layout or workflow that Jellyfin cannot currently handle.
+    validations:
+      required: true
+  - type: textarea
+    id: structure
+    attributes:
+      label: Example folder structure
+      render: text
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Desired behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Read-only safety
+      options:
+        - label: This request does not require moving, renaming, or deleting media files.
+          required: true

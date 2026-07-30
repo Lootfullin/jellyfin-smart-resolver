@@ -7,5 +7,8 @@ public enum ResolverEvidence
     TvShowNfo,
     LocalArtwork,
     VideoContent,
-    MovieVideoFile
+    MovieVideoFile,
+    MovieAlternateVersion,
+    MovieAdditionalPart,
+    NestedMovieFolder
 }

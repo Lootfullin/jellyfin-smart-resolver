@@ -1,0 +1,61 @@
+name: Bug report
+description: Report incorrect recognition, a crash, or an installation problem.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please remove private paths, credentials, and personal data before submitting logs.
+  - type: input
+    id: jellyfin-version
+    attributes:
+      label: Jellyfin version
+      placeholder: 10.11.11
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Smart Resolver version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows
+        - Linux
+        - Docker
+        - macOS
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: structure
+    attributes:
+      label: Folder structure
+      description: Show a small anonymized tree including the relevant filenames.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Jellyfin log lines
+      render: text
