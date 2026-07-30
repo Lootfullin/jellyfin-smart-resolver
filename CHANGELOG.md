@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Added Russian and English settings with plain-language descriptions.
+- Added a read-only folder preview and an administrator-only decision history.
+- Added alternate movie versions, multipart movies and one-level nested movies.
+- Added a plugin icon and catalog artwork metadata.
+- Added live Jellyfin container checks for 10.11.11 and 12.0 RC3.
+- Added Dependabot and structured GitHub issue forms.
+- Replaced the abbreviated license notice with the complete GPL-3.0 text.
+
 ## 1.0.0
 
 - Promoted the tested nested-series and movie filename resolvers to stable.

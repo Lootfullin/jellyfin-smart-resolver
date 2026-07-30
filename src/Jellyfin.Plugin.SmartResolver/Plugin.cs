@@ -25,7 +25,7 @@ public sealed class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
     public override Guid Id => Guid.Parse(PluginGuid);
 
     public override string Description =>
-        "Resolves nested series roots and derives movie metadata from video file names.";
+        "Finds series stored one folder deeper and reads movie names from video files.";
 
     public IEnumerable<PluginPageInfo> GetPages()
     {

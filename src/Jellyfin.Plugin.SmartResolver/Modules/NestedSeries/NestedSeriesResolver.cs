@@ -1,5 +1,6 @@
 using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.SmartResolver.Core;
+using Jellyfin.Plugin.SmartResolver.Diagnostics;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
@@ -12,13 +13,16 @@ namespace Jellyfin.Plugin.SmartResolver.Modules.NestedSeries;
 public sealed partial class NestedSeriesResolver : IItemResolver
 {
     private readonly NestedSeriesDetector _detector;
+    private readonly ResolutionHistory _history;
     private readonly ILogger<NestedSeriesResolver> _logger;
 
     public NestedSeriesResolver(
         NestedSeriesDetector detector,
+        ResolutionHistory history,
         ILogger<NestedSeriesResolver> logger)
     {
         _detector = detector;
+        _history = history;
         _logger = logger;
     }
 
@@ -52,6 +56,7 @@ public sealed partial class NestedSeriesResolver : IItemResolver
             args.Path,
             args.FileSystemChildren,
             configuration);
+        _history.Add("Series", decision);
         if (!decision.Accepted)
         {
             if (configuration.EnableRejectionLogs)

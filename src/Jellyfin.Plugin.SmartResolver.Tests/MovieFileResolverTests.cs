@@ -1,5 +1,6 @@
 using Emby.Naming.Common;
 using Jellyfin.Data.Enums;
+using Jellyfin.Plugin.SmartResolver.Diagnostics;
 using Jellyfin.Plugin.SmartResolver.Modules.Movies;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
@@ -128,6 +129,54 @@ public sealed class MovieFileResolverTests
     }
 
     [Fact]
+    public void ResolvePath_PreservesAlternateMovieVersions()
+    {
+        var folderPath = Path.Combine("Movies", "Navigation");
+        var fullHd = Path.Combine(folderPath, "Moonraker (1979) - 1080p.mkv");
+        var ultraHd = Path.Combine(folderPath, "Moonraker (1979) - 2160p.mkv");
+
+        var result = CreateResolver().ResolvePath(
+            CreateArgs(folderPath, [fullHd, ultraHd]));
+
+        var movie = Assert.IsType<Movie>(result);
+        Assert.Equal(fullHd, movie.Path);
+        Assert.Equal([ultraHd], movie.LocalAlternateVersions);
+    }
+
+    [Fact]
+    public void ResolvePath_PreservesMultipartMovieFiles()
+    {
+        var folderPath = Path.Combine("Movies", "Navigation");
+        var firstPart = Path.Combine(folderPath, "Once Upon a Time in America (1984) CD1.mkv");
+        var secondPart = Path.Combine(folderPath, "Once Upon a Time in America (1984) CD2.mkv");
+
+        var result = CreateResolver().ResolvePath(
+            CreateArgs(folderPath, [firstPart, secondPart]));
+
+        var movie = Assert.IsType<Movie>(result);
+        Assert.Equal(firstPart, movie.Path);
+        Assert.Equal([secondPart], movie.AdditionalParts);
+    }
+
+    [Fact]
+    public void ResolvePath_RecordsDecisionHistory()
+    {
+        var history = new ResolutionHistory();
+        var folderPath = Path.Combine("Movies", "Navigation");
+        var videoPath = Path.Combine(folderPath, "1917 (2019).mkv");
+
+        var result = CreateResolver(history: history).ResolvePath(
+            CreateArgs(folderPath, [videoPath]));
+
+        Assert.NotNull(result);
+        var entry = Assert.Single(history.GetRecent());
+        Assert.True(entry.Accepted);
+        Assert.Equal("Movies", entry.Module);
+        Assert.Equal("1917", entry.DetectedName);
+        Assert.Equal(2019, entry.DetectedYear);
+    }
+
+    [Fact]
     public void ResolvePath_LogsSuccessfulResolution()
     {
         var logger = new RecordingLogger<MovieFileResolver>();
@@ -147,10 +196,12 @@ public sealed class MovieFileResolverTests
     }
 
     private static MovieFileResolver CreateResolver(
-        ILogger<MovieFileResolver>? logger = null)
+        ILogger<MovieFileResolver>? logger = null,
+        ResolutionHistory? history = null)
     {
         return new MovieFileResolver(
             new MovieFileDetector(new NamingOptions()),
+            history ?? new ResolutionHistory(),
             logger ?? new RecordingLogger<MovieFileResolver>());
     }
 

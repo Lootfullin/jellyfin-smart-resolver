@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">Jellyfin Smart Resolver</title>
+  <desc id="description">A folder opening into a focused media play symbol.</desc>
+  <defs>
+    <linearGradient id="background" x1="64" y1="32" x2="448" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#11a8e2"/>
+      <stop offset="1" stop-color="#7357d9"/>
+    </linearGradient>
+    <linearGradient id="media" x1="202" y1="191" x2="342" y2="346" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d9f5ff"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#background)"/>
+  <path d="M104 158c0-25 20-45 45-45h82l35 42h97c25 0 45 20 45 45v174c0 25-20 45-45 45H149c-25 0-45-20-45-45V158Z"
+        fill="#111827" fill-opacity=".28"/>
+  <path d="M113 205h286l-29 169c-4 22-23 38-45 38H162c-23 0-42-17-45-40l-21-121c-4-24 4-46 17-46Z"
+        fill="#ffffff" fill-opacity=".22"/>
+  <circle cx="256" cy="291" r="103" fill="#111827" fill-opacity=".34"/>
+  <circle cx="256" cy="291" r="78" fill="none" stroke="url(#media)" stroke-width="18"/>
+  <path d="M235 249c0-9 10-15 18-10l64 43c7 5 7 15 0 20l-64 43c-8 5-18 0-18-10v-86Z"
+        fill="url(#media)"/>
+  <path d="M341 141l12 24 27 4-20 19 5 27-24-13-24 13 5-27-20-19 27-4 12-24Z"
+        fill="#fff"/>
+</svg>

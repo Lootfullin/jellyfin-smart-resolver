@@ -3,6 +3,7 @@
 publish/
 artifacts/
 .dotnet/
+.dotnet10/
 .vs/
 .idea/
 *.user

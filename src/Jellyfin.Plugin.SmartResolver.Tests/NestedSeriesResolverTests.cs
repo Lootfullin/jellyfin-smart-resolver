@@ -1,4 +1,5 @@
 using Jellyfin.Data.Enums;
+using Jellyfin.Plugin.SmartResolver.Diagnostics;
 using Jellyfin.Plugin.SmartResolver.Modules.NestedSeries;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
@@ -270,6 +271,7 @@ public sealed class NestedSeriesResolverTests : IDisposable
     {
         return new NestedSeriesResolver(
             new NestedSeriesDetector(),
+            new ResolutionHistory(),
             logger ?? new RecordingLogger<NestedSeriesResolver>());
     }
 

@@ -10,6 +10,10 @@ public sealed record ResolverDecision(
     int? DetectedYear,
     IReadOnlyList<ResolverEvidence> Evidence)
 {
+    public IReadOnlyList<string> AdditionalParts { get; init; } = [];
+
+    public IReadOnlyList<string> AlternateVersions { get; init; } = [];
+
     public static ResolverDecision Accept(
         string outerPath,
         string resolvedPath,
@@ -44,4 +48,3 @@ public sealed record ResolverDecision(
             []);
     }
 }
-
