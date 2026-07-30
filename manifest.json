@@ -1,21 +1,21 @@
 [
   {
+    "overview": "Finds series stored one folder deeper and reads movie names from video files.",
+    "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
+    "category": "General",
+    "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/assets/icon.svg",
     "owner": "Lootfullin",
     "name": "Jellyfin Smart Resolver",
-    "category": "General",
-    "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
-    "description": "Safe, read-only media structure resolvers for Jellyfin.",
+    "description": "Safely finds media stored in extra folders and reads movie names from video files.",
     "versions": [
       {
-        "changelog": "Stable release with nested series and filename-based movie resolution.",
-        "targetAbi": "10.11.11.0",
-        "timestamp": "2026-07-30T14:10:31Z",
-        "version": "1.0.0.0",
-        "sourceUrl": "https://github.com/Lootfullin/jellyfin-smart-resolver/releases/download/v1.0.0/Jellyfin.SmartResolver_1.0.0_jellyfin-10.11.11.zip",
-        "checksum": "5471a65c0b318f7e4931ecf771a2fb76"
+        "timestamp": "2026-07-30T15:47:43Z",
+        "version": "1.1.0.0",
+        "sourceUrl": "https://github.com/Lootfullin/jellyfin-smart-resolver/releases/download/v1.1.0/Jellyfin.SmartResolver_1.1.0_jellyfin-10.11.11.zip",
+        "changelog": "Plain-language settings, diagnostics, movie versions, multipart movies and deeper movie folders.",
+        "checksum": "1decb4748449ec8d5919e7a73b13d00d",
+        "targetAbi": "10.11.11.0"
       }
-    ],
-    "overview": "Resolves nested series roots and derives movie metadata from video filenames.",
-    "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/assets/icon.svg"
+    ]
   }
 ]
