@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
 
 - Added Russian and English settings with plain-language descriptions.
 - Added a read-only folder preview and an administrator-only decision history.
