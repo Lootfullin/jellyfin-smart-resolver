@@ -9,7 +9,7 @@
 
 ## The Plugins page fails
 
-Install the latest `0.1.0-beta` DLL. The plugin uses Jellyfin's standard
+Install the latest `1.0.0` DLL. The plugin uses Jellyfin's standard
 configurable `BasePlugin`, which initializes the assembly path required by the
 Plugins page.
 
@@ -28,6 +28,13 @@ Plugins page.
 - Put the title and year in the video filename, for example
   `Moonraker (1979) [WEB-DL].mkv`.
 - Do not rely on the parent folder for the title.
+
+## A numeric movie title matched the wrong film
+
+Smart Resolver keeps the title and release year separate: `2012 (2009).mkv`
+becomes title `2012`, year `2009`, and `1917 (2019).mkv` becomes title `1917`,
+year `2019`. If a metadata provider still chooses the wrong film, add its ID
+to the filename, for example `1917 (2019) [tmdbid-530915].mkv`, and rescan it.
 
 ## The title is temporarily English
 

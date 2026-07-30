@@ -1,7 +1,14 @@
 [CmdletBinding()]
-param()
+param(
+    [string]$Version = '1.0.0',
+    [string]$JellyfinVersion = '10.11.11'
+)
 
 $ErrorActionPreference = 'Stop'
+if ($Version -notmatch '^\d+\.\d+\.\d+$') {
+    throw 'Version must use stable semantic versioning, for example 1.0.0.'
+}
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $localDotnet = Join-Path $repoRoot '.dotnet\dotnet.exe'
 $dotnet = if (Test-Path -LiteralPath $localDotnet) {
@@ -10,8 +17,7 @@ $dotnet = if (Test-Path -LiteralPath $localDotnet) {
     (Get-Command dotnet -ErrorAction Stop).Source
 }
 
-$version = '0.1.0-beta'
-$archiveName = "Jellyfin.SmartResolver_${version}_jellyfin-10.11.11.zip"
+$archiveName = "Jellyfin.SmartResolver_${Version}_jellyfin-$JellyfinVersion.zip"
 $artifacts = Join-Path $repoRoot 'artifacts'
 $publish = Join-Path $repoRoot 'publish'
 $stage = Join-Path $artifacts 'package'
@@ -32,7 +38,7 @@ New-Item -ItemType Directory -Path $stage -Force | Out-Null
 
 & $dotnet restore (Join-Path $repoRoot 'Jellyfin.SmartResolver.sln')
 if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed.' }
-& $dotnet build (Join-Path $repoRoot 'Jellyfin.SmartResolver.sln') -c Release --no-restore
+& $dotnet build (Join-Path $repoRoot 'Jellyfin.SmartResolver.sln') -c Release --no-restore -p:Version=$Version
 if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed.' }
 & $dotnet test (Join-Path $repoRoot 'Jellyfin.SmartResolver.sln') -c Release --no-build
 if ($LASTEXITCODE -ne 0) { throw 'dotnet test failed.' }
@@ -49,19 +55,22 @@ Copy-Item -LiteralPath $dll -Destination $stage
 
 $meta = @{
     category = 'General'
-    changelog = 'Initial beta with nested series and movie filename resolvers.'
+    changelog = 'Stable release with nested series and filename-based movie resolution.'
     description = 'Safe, read-only media structure resolvers for Jellyfin.'
     guid = 'c61d7897-a923-4a6d-9d4d-c6c911f28e73'
     name = 'Jellyfin Smart Resolver'
     overview = 'Resolves nested series roots and derives movie metadata from video filenames.'
     owner = 'Lootfullin'
-    targetAbi = '10.11.11.0'
+    targetAbi = "$JellyfinVersion.0"
     timestamp = [DateTime]::UtcNow.ToString('o')
-    version = '0.1.0.0'
+    version = "$Version.0"
     status = 'Active'
     autoUpdate = $false
 }
-$meta | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stage 'meta.json') -Encoding utf8
+$metaPath = Join-Path $stage 'meta.json'
+$metaJson = ConvertTo-Json -InputObject $meta
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($metaPath, "$metaJson`n", $utf8NoBom)
 
 New-Item -ItemType Directory -Path $artifacts -Force | Out-Null
 $archive = Join-Path $artifacts $archiveName

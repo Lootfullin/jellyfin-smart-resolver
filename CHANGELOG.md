@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0
+
+- Promoted the tested nested-series and movie filename resolvers to stable.
+- Added regression coverage for numeric movie titles such as `2012`, `1917`
+  and `1984`.
+- Added a reusable stable release workflow for future version tags.
+- Fixed Jellyfin plugin-catalog generation so its root is always a JSON array.
+- Retained cross-platform packaging for Windows, Linux, macOS and containers.
+
 ## 0.1.0-beta
 
 - Added safe nested-series root resolution.

@@ -6,13 +6,21 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Checksum,
 
-    [string]$ReleaseTag = 'v0.1.0-beta',
+    [string]$ReleaseTag = 'v1.0.0',
+
+    [string]$PluginVersion = '1.0.0',
+
+    [string]$JellyfinVersion = '10.11.11',
 
     [string]$Timestamp = ([DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ'))
 )
 
 $ErrorActionPreference = 'Stop'
-$archiveName = 'Jellyfin.SmartResolver_0.1.0-beta_jellyfin-10.11.11.zip'
+if ($PluginVersion -notmatch '^\d+\.\d+\.\d+$') {
+    throw 'PluginVersion must use stable semantic versioning, for example 1.0.0.'
+}
+
+$archiveName = "Jellyfin.SmartResolver_${PluginVersion}_jellyfin-$JellyfinVersion.zip"
 $manifest = @(
     @{
         guid = 'c61d7897-a923-4a6d-9d4d-c6c911f28e73'
@@ -23,9 +31,9 @@ $manifest = @(
         category = 'General'
         versions = @(
             @{
-                version = '0.1.0.0'
-                changelog = 'Initial beta with nested series and movie filename resolvers.'
-                targetAbi = '10.11.11.0'
+                version = "$PluginVersion.0"
+                changelog = 'Stable release with nested series and filename-based movie resolution.'
+                targetAbi = "$JellyfinVersion.0"
                 sourceUrl = "https://github.com/$Repository/releases/download/$ReleaseTag/$archiveName"
                 checksum = $Checksum.ToLowerInvariant()
                 timestamp = $Timestamp

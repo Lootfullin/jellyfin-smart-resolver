@@ -51,6 +51,24 @@ public sealed class MovieFileResolverTests
         Assert.Equal(1979, movie.ProductionYear);
     }
 
+    [Theory]
+    [InlineData("2012 (2009) [WEB-DL].mkv", "2012", 2009)]
+    [InlineData("1917 (2019) [UHD].mkv", "1917", 2019)]
+    public void ResolvePath_PreservesNumericMovieTitle(
+        string fileName,
+        string expectedTitle,
+        int expectedYear)
+    {
+        var folderPath = Path.Combine("Movies", "Navigation Folder");
+        var videoPath = Path.Combine(folderPath, fileName);
+
+        var result = CreateResolver().ResolvePath(CreateArgs(folderPath, [videoPath]));
+
+        var movie = Assert.IsType<Movie>(result);
+        Assert.Equal(expectedTitle, movie.Name);
+        Assert.Equal(expectedYear, movie.ProductionYear);
+    }
+
     [Fact]
     public void ResolvePath_PreservesProviderIdsFromVideoPath()
     {
