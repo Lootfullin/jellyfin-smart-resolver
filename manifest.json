@@ -51,5 +51,24 @@
                              "targetAbi":  "10.11.11.0"
                          }
                      ]
+    },
+    {
+        "overview":  "Custom artwork from a private Cowabunga cloud.",
+        "guid":  "6f2d1a54-9c6e-4f2b-9a7d-5c1e2b8a44f1",
+        "category":  "General",
+        "owner":  "iMaks533",
+        "name":  "Cowabunga Custom Artwork",
+        "description":  "Provides custom posters and logos for movies, series, seasons and collections.",
+        "imageUrl":  "https://raw.githubusercontent.com/Lootfullin/jellyfin-custom-artwork/main/packaging/logo.png",
+        "versions":  [
+                         {
+                             "timestamp":  "2026-08-01T10:40:08Z",
+                             "version":  "2.1.1.0",
+                             "sourceUrl":  "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.1.1/Cowabunga.Custom.Artwork_2.1.1.0.zip",
+                             "changelog":  "Added installation and automatic updates through the Jellyfin plugin repository.",
+                             "checksum":  "73a9fa9bf91bb5aeb84a5a3c313b4ad1",
+                             "targetAbi":  "10.11.0.0"
+                         }
+                     ]
     }
 ]
