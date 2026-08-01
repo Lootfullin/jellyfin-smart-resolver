@@ -1,5 +1,13 @@
 # Changelog
 
+## Plugin catalog — 2026-08-01
+
+- Published Cowabunga Custom Artwork 2.3.0 with stable TMDB-based collection
+  identities, nested and custom supercollection support, and automatic image
+  provider priority.
+- Published Choose your Meta! 1.4.3 with persistent Russian collection titles
+  and coordinated Cowabunga Custom Artwork image priority.
+
 ## 1.1.0
 
 - Added Russian and English settings with plain-language descriptions.
