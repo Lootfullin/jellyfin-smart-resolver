@@ -31,7 +31,7 @@
                              "version":  "1.4.3.0",
                              "sourceUrl":  "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.3/ChooseYourMeta_1.4.3_jellyfin-10.11.11.zip",
                              "changelog":  "Keep Russian collection titles after metadata merges and prioritize Cowabunga Custom Artwork for collection images.",
-                             "checksum":  "514feb3ce615a2bb93950c94175fb9a7",
+                             "checksum":  "935101650bc83443d3a7337f969e37b8",
                              "targetAbi":  "10.11.11.0"
                          },
                          {
