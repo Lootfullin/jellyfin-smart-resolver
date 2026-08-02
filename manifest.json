@@ -27,12 +27,12 @@
     "description": "Choose Russian or English metadata, posters, and logos for movies and collections.",
     "versions": [
       {
-        "timestamp": "2026-08-02T12:16:31Z",
-        "version": "1.4.5.0",
-        "sourceUrl": "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.5/ChooseYourMeta_1.4.5_jellyfin-10.11.11.zip",
-        "changelog": "Fix image-language preference fields so enum values display and persist correctly in Jellyfin settings.",
-        "checksum": "4dda3a20705d505391e387026cca8f50",
-        "targetAbi": "10.11.11.0"
+        "version": "1.4.6.0",
+        "changelog": "Fix settings persistence, provider ordering, and stale plugin version cleanup.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.6/ChooseYourMeta_1.4.6_jellyfin-10.11.11.zip",
+        "checksum": "2e96e17060a16a88bf61b5bee6f85f61",
+        "timestamp": "2026-08-02T15:12:50Z"
       }
     ]
   },
