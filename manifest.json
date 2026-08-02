@@ -46,12 +46,12 @@
     "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-custom-artwork/main/packaging/logo.png",
     "versions": [
       {
-        "timestamp": "2026-08-02T12:15:50Z",
-        "version": "2.3.3.0",
-        "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.3.3/Cowabunga.Custom.Artwork_2.3.3.0.zip",
-        "changelog": "Load indexed collection artwork directly after size and SHA-256 validation; retain normal Jellyfin fallback only when no custom poster exists.",
-        "checksum": "39c7b067a1d71373b317a65e0c770580",
-        "targetAbi": "10.11.0.0"
+        "version": "2.3.4.0",
+        "changelog": "Fix artwork application and prevent fallback to stale plugin versions.",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.3.4/Cowabunga.Custom.Artwork_2.3.4.0.zip",
+        "checksum": "f3c47960b9365db776d0ebfa8ef09e68",
+        "timestamp": "2026-08-02T15:12:13Z"
       }
     ]
   }
