@@ -50,7 +50,7 @@
         "changelog": "Надёжное сопоставление фильмов, сериалов, сезонов и коллекций по TMDB ID и составу коллекций; актуальные именованные файлы имеют приоритет над устаревшим poster.jpg; устранены бесконечные повторные проверки и постоянная нагрузка CPU.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.4.0/Cowabunga.Custom.Artwork_2.4.0.0.zip",
-        "checksum": "d30cd5b17d8dd31ec05c0f0b68320092",
+        "checksum": "afced7534fe026d5d611ffb35cc47636",
         "timestamp": "2026-08-02T20:40:13Z"
       }
     ]
