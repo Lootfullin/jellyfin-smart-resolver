@@ -1,5 +1,10 @@
 # Changelog
 
+## Plugin catalog — 2026-08-03
+
+- Published Cowabunga Custom Artwork 2.4.1. Collection membership now wins over
+  incorrect provider IDs and localized names when selecting collection artwork.
+
 ## 1.1.1
 
 - Kept only the current compatible build of each plugin in the live Jellyfin catalog.
