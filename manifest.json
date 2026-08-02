@@ -50,7 +50,7 @@
         "changelog": "Коллекции сопоставляются сначала по TMDB ID входящих фильмов, затем по ID коллекции и только потом по названию. Исправлены неверные постеры при ошибочном или локализованном ID коллекции.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.4.1/Cowabunga.Custom.Artwork_2.4.1.0.zip",
-        "checksum": "60fbeae7c5e9ee257259a2298ebe0fbc",
+        "checksum": "69a947286fc44833332541c15d1f9a08",
         "timestamp": "2026-08-02T22:45:08Z"
       }
     ]
