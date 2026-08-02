@@ -50,7 +50,7 @@
         "changelog": "Удалена небезопасная фоновая очистка каталогов версий, из-за которой установленный плагин мог удалить сам себя после запуска. Обновления снова полностью управляются Jellyfin.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.4.2/Cowabunga.Custom.Artwork_2.4.2.0.zip",
-        "checksum": "851245fa1cde7942e0859b6b2808ecf8",
+        "checksum": "28ff6d293d2a259bbcd018838f652d2e",
         "timestamp": "2026-08-02T23:41:45Z"
       }
     ]
