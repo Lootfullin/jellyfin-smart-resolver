@@ -46,12 +46,12 @@
     "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-custom-artwork/main/packaging/logo.png",
     "versions": [
       {
-        "version": "2.3.4.0",
-        "changelog": "Fix artwork application and prevent fallback to stale plugin versions.",
+        "version": "2.3.5.0",
+        "changelog": "Исправлено сопоставление коллекций с одинаковыми копиями постеров и логотипов в корневых и вложенных папках; различающиеся изображения по-прежнему безопасно пропускаются.",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.3.4/Cowabunga.Custom.Artwork_2.3.4.0.zip",
-        "checksum": "f3c47960b9365db776d0ebfa8ef09e68",
-        "timestamp": "2026-08-02T15:12:13Z"
+        "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.3.5/Cowabunga.Custom.Artwork_2.3.5.0.zip",
+        "checksum": "6c870e67d10d2f1e09eb64f16626ec38",
+        "timestamp": "2026-08-02T18:06:45Z"
       }
     ]
   }
