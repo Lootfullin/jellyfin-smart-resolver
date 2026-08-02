@@ -2,6 +2,8 @@
 
 ## Plugin catalog — 2026-08-03
 
+- Published Cowabunga Custom Artwork 2.4.2. Removed the destructive background
+  version cleanup that could delete the active plugin directory after startup.
 - Published Cowabunga Custom Artwork 2.4.1. Collection membership now wins over
   incorrect provider IDs and localized names when selecting collection artwork.
 - Corrected the 2.4.1 catalog checksum to match the final public release asset,
