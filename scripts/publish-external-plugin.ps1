@@ -102,9 +102,10 @@ try {
         checksum = $checksum
         timestamp = $Timestamp
     }
-    $catalogPlugin.versions = @($newVersion) + @($catalogPlugin.versions | Where-Object {
-        $_.version -ne $Version
-    })
+    # The live catalog contains one compatible build per plugin. Historical
+    # archives stay in GitHub Releases but must not be reconciled back into an
+    # Active state when Windows still has an old plugin DLL locked.
+    $catalogPlugin.versions = @($newVersion)
 
     $json = ConvertTo-Json -InputObject @($manifest) -Depth 6
     $null = ConvertFrom-Json -InputObject $json

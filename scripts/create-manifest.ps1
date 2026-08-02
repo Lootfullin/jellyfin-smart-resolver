@@ -35,21 +35,12 @@ $newVersion = @{
     timestamp = $Timestamp
 }
 
-$existingVersions = @()
 $otherPlugins = @()
 if (Test-Path -LiteralPath $ManifestPath) {
     $parsedManifest = ConvertFrom-Json -InputObject (
         Get-Content -Raw -LiteralPath $ManifestPath
     )
     $existingManifest = @($parsedManifest | ForEach-Object { $_ })
-    $existingSmartResolver = $existingManifest | Where-Object {
-        $_.guid -eq $smartResolverGuid
-    } | Select-Object -First 1
-    if ($null -ne $existingSmartResolver) {
-        $existingVersions = @($existingSmartResolver.versions | Where-Object {
-            $_.version -ne "$PluginVersion.0"
-        })
-    }
     $otherPlugins = @($existingManifest | Where-Object {
         $_.guid -ne $smartResolverGuid
     })
@@ -63,7 +54,11 @@ $smartResolver = @{
     imageUrl = 'https://raw.githubusercontent.com/Lootfullin/jellyfin-smart-resolver/main/assets/icon.svg'
     owner = 'Lootfullin'
     category = 'General'
-    versions = @($newVersion) + $existingVersions
+    # Keep only the current compatible build in the live catalog. Old builds
+    # remain available on GitHub Releases, but publishing them here causes
+    # Jellyfin to reconcile stale on-disk manifests and reactivate folders
+    # which Windows could not remove while their DLLs were loaded.
+    versions = @($newVersion)
 }
 
 $manifest = @($smartResolver) + $otherPlugins

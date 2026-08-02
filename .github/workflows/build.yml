@@ -26,6 +26,10 @@ jobs:
       - run: dotnet build -c Release --no-restore
       - run: dotnet test -c Release --no-build
       - run: node scripts/test-config-page.mjs
+      - name: Validate live plugin catalog
+        if: runner.os == 'Linux'
+        shell: pwsh
+        run: ./scripts/verify-catalog.ps1
       - name: Build and verify release package
         if: runner.os == 'Linux'
         run: ./scripts/package.sh 1.1.1 10.11.11
@@ -44,6 +48,7 @@ jobs:
             throw 'Plugin catalog root is not a JSON array.'
           }
           $null = ConvertFrom-Json -InputObject $json
+          ./scripts/verify-catalog.ps1
 
   docker-smoke:
     name: Jellyfin ${{ matrix.server-tag }} container

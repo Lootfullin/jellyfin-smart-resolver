@@ -61,7 +61,7 @@ Copy-Item -LiteralPath $dll -Destination $stage
 
 $meta = @{
     category = 'General'
-    changelog = 'Enable reliable automatic updates from the Jellyfin plugin repository.'
+    changelog = 'Keep one current build in the live catalog, mark stale plugin versions deleted, and retry directory cleanup so Jellyfin cannot fall back to an older build.'
     description = 'Safely finds media stored in extra folders and reads movie names from video files.'
     guid = 'c61d7897-a923-4a6d-9d4d-c6c911f28e73'
     name = 'Jellyfin Smart Resolver'

@@ -14,6 +14,7 @@ public sealed class PluginServiceRegistrator : IPluginServiceRegistrator
         IServiceCollection serviceCollection,
         IServerApplicationHost applicationHost)
     {
+        serviceCollection.AddHostedService<StalePluginVersionCleanupService>();
         serviceCollection.AddSingleton<ResolutionHistory>();
         serviceCollection.AddSingleton<MovieFileDetector>();
         serviceCollection.AddSingleton<OuterFolderMatcher>();
