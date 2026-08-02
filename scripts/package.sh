@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-version="${1:-1.1.0}"
+version="${1:-1.1.1}"
 jellyfin_version="${2:-10.11.11}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/.." && pwd)"
@@ -48,12 +48,14 @@ dotnet publish \
 
 dll="${publish}/Jellyfin.Plugin.SmartResolver.dll"
 test -f "${dll}"
+grep -q "<Version>${version}</Version>" \
+    "${repo_root}/src/Jellyfin.Plugin.SmartResolver/Jellyfin.Plugin.SmartResolver.csproj"
 cp -- "${dll}" "${stage}/"
 
 cat > "${stage}/meta.json" <<EOF
 {
   "category": "General",
-  "changelog": "Plain-language settings, diagnostics, movie versions, multipart movies and deeper movie folders.",
+  "changelog": "Enable reliable automatic updates from the Jellyfin plugin repository.",
   "description": "Safely finds media stored in extra folders and reads movie names from video files.",
   "guid": "c61d7897-a923-4a6d-9d4d-c6c911f28e73",
   "name": "Jellyfin Smart Resolver",
@@ -64,7 +66,7 @@ cat > "${stage}/meta.json" <<EOF
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "version": "${version}.0",
   "status": "Active",
-  "autoUpdate": false
+  "autoUpdate": true
 }
 EOF
 
@@ -75,6 +77,12 @@ rm -f -- "${archive}" "${archive}.sha256"
     cd "${stage}"
     zip -q -X "${archive}" Jellyfin.Plugin.SmartResolver.dll meta.json
 )
+
+python3 "${script_dir}/verify-package.py" \
+    "${archive}" \
+    "${version}.0" \
+    "${jellyfin_version}.0" \
+    "Jellyfin.Plugin.SmartResolver.dll"
 
 checksum="$(shasum -a 256 "${archive}" | awk '{print $1}')"
 printf '%s  %s\n' "${checksum}" "${archive_name}" > "${archive}.sha256"
