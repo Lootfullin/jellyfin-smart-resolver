@@ -4,6 +4,8 @@
 
 - Published Cowabunga Custom Artwork 2.4.1. Collection membership now wins over
   incorrect provider IDs and localized names when selecting collection artwork.
+- Corrected the 2.4.1 catalog checksum to match the final public release asset,
+  restoring installation and updates through Jellyfin.
 
 ## 1.1.1
 
