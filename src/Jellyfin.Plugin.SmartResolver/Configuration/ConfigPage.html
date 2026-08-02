@@ -220,6 +220,23 @@
                 return object[camel] !== undefined ? object[camel] : object[pascal];
             }
 
+            function resolverMode(value) {
+                const values = {
+                    YearPrefix: '0',
+                    AnySingleNestedSeries: '1',
+                    CustomRegex: '2'
+                };
+                if (value === null || value === undefined || value === '') {
+                    return '0';
+                }
+
+                if (/^[0-2]$/.test(String(value))) {
+                    return String(value);
+                }
+
+                return values[value] || '0';
+            }
+
             function moduleName(entry) {
                 const module = value(entry, 'module', 'Module');
                 return module === 'Movies' ? t.moduleMovies : t.moduleSeries;
@@ -313,7 +330,8 @@
                 ApiClient.getPluginConfiguration(pluginId).then(function (config) {
                     page.querySelector('#Enabled').checked = config.Enabled;
                     page.querySelector('#NestedSeriesEnabled').checked = config.NestedSeriesEnabled;
-                    page.querySelector('#NestedSeriesMode').value = config.NestedSeriesMode;
+                    page.querySelector('#NestedSeriesMode').value =
+                        resolverMode(config.NestedSeriesMode);
                     page.querySelector('#CustomRegex').value = config.CustomRegex || '';
                     page.querySelector('#RequireExactlyOneEligibleChild').checked =
                         config.RequireExactlyOneEligibleChild;

@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '1.1.0',
-    [string]$JellyfinVersion = '10.11.11'
+    [string]$Version = '1.1.1',
+    [string]$JellyfinVersion = '10.11.11',
+    [string]$DotnetPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,7 +12,9 @@ if ($Version -notmatch '^\d+\.\d+\.\d+$') {
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $localDotnet = Join-Path $repoRoot '.dotnet\dotnet.exe'
-$dotnet = if (Test-Path -LiteralPath $localDotnet) {
+$dotnet = if (-not [string]::IsNullOrWhiteSpace($DotnetPath)) {
+    (Resolve-Path -LiteralPath $DotnetPath -ErrorAction Stop).Path
+} elseif (Test-Path -LiteralPath $localDotnet) {
     $localDotnet
 } else {
     (Get-Command dotnet -ErrorAction Stop).Source
@@ -51,11 +54,14 @@ $dll = Join-Path $publish 'Jellyfin.Plugin.SmartResolver.dll'
 if (-not (Test-Path -LiteralPath $dll)) {
     throw 'Published plugin DLL was not found.'
 }
+if ((Get-Item -LiteralPath $dll).VersionInfo.FileVersion -ne "$Version.0") {
+    throw 'Published plugin DLL version does not match the requested version.'
+}
 Copy-Item -LiteralPath $dll -Destination $stage
 
 $meta = @{
     category = 'General'
-    changelog = 'Plain-language settings, diagnostics, movie versions, multipart movies and deeper movie folders.'
+    changelog = 'Keep one current build in the live catalog, mark stale plugin versions deleted, and retry directory cleanup so Jellyfin cannot fall back to an older build.'
     description = 'Safely finds media stored in extra folders and reads movie names from video files.'
     guid = 'c61d7897-a923-4a6d-9d4d-c6c911f28e73'
     name = 'Jellyfin Smart Resolver'
@@ -66,7 +72,7 @@ $meta = @{
     timestamp = [DateTime]::UtcNow.ToString('o')
     version = "$Version.0"
     status = 'Active'
-    autoUpdate = $false
+    autoUpdate = $true
 }
 $metaPath = Join-Path $stage 'meta.json'
 $metaJson = ConvertTo-Json -InputObject $meta
@@ -79,6 +85,36 @@ if (Test-Path -LiteralPath $archive) {
     Remove-Item -LiteralPath $archive -Force
 }
 Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $archive
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$package = [System.IO.Compression.ZipFile]::OpenRead($archive)
+try {
+    $entries = @($package.Entries | Where-Object { $_.Name } | ForEach-Object FullName)
+    $expectedEntries = @('meta.json', 'Jellyfin.Plugin.SmartResolver.dll')
+    if (@(Compare-Object $entries $expectedEntries).Count -ne 0) {
+        throw "Package root is invalid: $($entries -join ', ')."
+    }
+
+    $metaEntry = $package.GetEntry('meta.json')
+    $reader = [System.IO.StreamReader]::new($metaEntry.Open())
+    try {
+        $packagedMeta = $reader.ReadToEnd() | ConvertFrom-Json
+    } finally {
+        $reader.Dispose()
+    }
+
+    if ($packagedMeta.autoUpdate -ne $true) {
+        throw 'Packaged meta.json must set autoUpdate to true.'
+    }
+    if ($packagedMeta.version -ne "$Version.0") {
+        throw "Packaged version is '$($packagedMeta.version)'."
+    }
+    if ($packagedMeta.targetAbi -ne "$JellyfinVersion.0") {
+        throw "Packaged target ABI is '$($packagedMeta.targetAbi)'."
+    }
+} finally {
+    $package.Dispose()
+}
 
 $checksum = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
 $checksumPath = "$archive.sha256"

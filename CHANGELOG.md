@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+- Kept only the current compatible build of each plugin in the live Jellyfin catalog.
+- Added guarded cleanup of stale version directories, including retries for DLLs temporarily locked by Windows.
+- Added catalog contract validation to CI and release publishing scripts.
+
 ## Plugin catalog — 2026-08-01
 
 - Published Cowabunga Custom Artwork 2.3.0 with stable TMDB-based collection

@@ -22,18 +22,6 @@ jobs:
       - name: Build, test and package
         shell: bash
         run: ./scripts/package.sh "${GITHUB_REF_NAME#v}" "$JELLYFIN_VERSION"
-      - name: Create plugin catalog manifest
-        shell: pwsh
-        run: |
-          $pluginVersion = $env:GITHUB_REF_NAME.Substring(1)
-          $archive = "artifacts/Jellyfin.SmartResolver_${pluginVersion}_jellyfin-$env:JELLYFIN_VERSION.zip"
-          $checksum = (Get-FileHash -LiteralPath $archive -Algorithm MD5).Hash
-          ./scripts/create-manifest.ps1 `
-            -Repository '${{ github.repository }}' `
-            -Checksum $checksum `
-            -ReleaseTag '${{ github.ref_name }}' `
-            -PluginVersion $pluginVersion `
-            -JellyfinVersion $env:JELLYFIN_VERSION
       - uses: softprops/action-gh-release@v3
         with:
           prerelease: false
@@ -42,14 +30,24 @@ jobs:
             artifacts/Jellyfin.SmartResolver_*.zip
             artifacts/Jellyfin.SmartResolver_*.zip.sha256
       - name: Publish catalog manifest
-        shell: bash
+        shell: pwsh
         run: |
-          cp manifest.json "$RUNNER_TEMP/manifest.json"
+          $pluginVersion = $env:GITHUB_REF_NAME.Substring(1)
+          $archive = "artifacts/Jellyfin.SmartResolver_${pluginVersion}_jellyfin-$env:JELLYFIN_VERSION.zip"
+          $checksum = (Get-FileHash -LiteralPath $archive -Algorithm MD5).Hash
           git fetch origin main
-          git checkout main
-          cp "$RUNNER_TEMP/manifest.json" manifest.json
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git checkout -B main origin/main
+          ./scripts/create-manifest.ps1 `
+            -Repository '${{ github.repository }}' `
+            -Checksum $checksum `
+            -ReleaseTag '${{ github.ref_name }}' `
+            -PluginVersion $pluginVersion `
+            -JellyfinVersion $env:JELLYFIN_VERSION
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add manifest.json
-          git diff --cached --quiet || git commit -m "Update plugin manifest for ${GITHUB_REF_NAME}"
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "Update plugin manifest for $env:GITHUB_REF_NAME"
+          }
           git push origin main

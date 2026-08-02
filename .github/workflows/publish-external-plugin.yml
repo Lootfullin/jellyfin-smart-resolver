@@ -1,0 +1,54 @@
+name: Publish external plugin to catalog
+
+on:
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: Plugin contract
+        required: true
+        type: choice
+        options:
+          - ChooseYourMeta
+          - CustomArtwork
+      version:
+        description: Four-component plugin version
+        required: true
+        type: string
+      source_url:
+        description: HTTPS URL of the published release ZIP
+        required: true
+        type: string
+      changelog:
+        description: Catalog changelog
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - name: Verify release and update catalog
+        shell: pwsh
+        run: |
+          ./scripts/publish-external-plugin.ps1 `
+            -Plugin '${{ inputs.plugin }}' `
+            -Version '${{ inputs.version }}' `
+            -SourceUrl '${{ inputs.source_url }}' `
+            -Changelog '${{ inputs.changelog }}'
+      - name: Commit catalog update
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add manifest.json
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "Publish ${{ inputs.plugin }} ${{ inputs.version }}"
+            git push origin main
+          }
