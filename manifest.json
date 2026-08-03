@@ -27,12 +27,12 @@
     "description": "Choose Russian or English metadata, posters, and logos for movies and collections.",
     "versions": [
       {
-        "version": "1.4.7.0",
-        "changelog": "Preserve TMDB collection membership during movie refreshes so TMDb Box Sets no longer deletes and recreates localized collections.",
+        "version": "1.4.8.0",
+        "changelog": "Identify collections from linked movies and safely identify movies and series. Exact IMDb mappings correct stale TMDB IDs; ambiguous title/year searches are skipped instead of selecting the first result.",
         "targetAbi": "10.11.11.0",
-        "sourceUrl": "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.7/ChooseYourMeta_1.4.7_jellyfin-10.11.11.zip",
-        "checksum": "38ccea51927a3f76c5297b92229defad",
-        "timestamp": "2026-08-02T15:53:54Z"
+        "sourceUrl": "https://github.com/Lootfullin/choose-your-meta/releases/download/v1.4.8/ChooseYourMeta_1.4.8_jellyfin-10.11.11.zip",
+        "checksum": "453fa1ba343268a259a3f8a6560ccaba",
+        "timestamp": "2026-08-03T18:05:40Z"
       }
     ]
   },
