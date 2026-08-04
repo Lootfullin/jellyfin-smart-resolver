@@ -46,12 +46,12 @@
     "imageUrl": "https://raw.githubusercontent.com/Lootfullin/jellyfin-custom-artwork/main/packaging/logo.png",
     "versions": [
       {
-        "version": "2.4.2.0",
-        "changelog": "Удалена небезопасная фоновая очистка каталогов версий, из-за которой установленный плагин мог удалить сам себя после запуска. Обновления снова полностью управляются Jellyfin.",
+        "version": "2.4.3.0",
+        "changelog": "Локальные poster/folder/cover/default и clearlogo/logo корректно заменяются только по явной настройке; неприменённые изображения коллекций гарантированно ставятся на refresh; изменения индекса подтверждаются после постановки обновлений в очередь.",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.4.2/Cowabunga.Custom.Artwork_2.4.2.0.zip",
-        "checksum": "28ff6d293d2a259bbcd018838f652d2e",
-        "timestamp": "2026-08-02T23:41:45Z"
+        "sourceUrl": "https://github.com/Lootfullin/jellyfin-custom-artwork/releases/download/v2.4.3/Cowabunga.Custom.Artwork_2.4.3.0.zip",
+        "checksum": "cec1d835992dd9d342837f98e767e952",
+        "timestamp": "2026-08-04T16:54:37Z"
       }
     ]
   }
